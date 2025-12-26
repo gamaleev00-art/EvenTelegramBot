@@ -17,13 +17,14 @@ public class UserServiceImpl implements UserService {
     private final YandexUserRepository yandexUserRepository;
 
     @Override
-    public TelegramUser getOrCreateTelegramUser(Long telegramId, String username) {
+    public TelegramUser getOrCreateTelegramUser(Long telegramId, String username, String timezone) {
         return telegramUserRepository
                 .findByTelegramId(telegramId)
                 .orElseGet(()->{
                     TelegramUser telegramUser = new TelegramUser();
                     telegramUser.setTelegramId(telegramId);
                     telegramUser.setTelegramName(username);
+                    telegramUser.setTimezone(timezone);
                     return  telegramUserRepository.save(telegramUser);
                 });
     }
