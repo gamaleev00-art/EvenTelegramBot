@@ -2,7 +2,9 @@ package com.denis_gamaleev.EvenTelegramBot.service;
 
 import com.denis_gamaleev.EvenTelegramBot.config.TelegramBotConfig;
 import com.denis_gamaleev.EvenTelegramBot.handlers.CommandHandler;
+import com.denis_gamaleev.EvenTelegramBot.handlers.dispatcher.CommandDispatcher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,18 +18,18 @@ import java.util.List;
 public class TelegramBotService extends TelegramLongPollingBot {
 
 
-    private List<CommandHandler> handlers;
-    private UserServiceImpl userServiceImpl;
-    private TelegramBotConfig telegramBotConfig;
+    private final CommandDispatcher dispatcher;
+    private final TelegramBotConfig config;
 
-    @Override
-    public String getBotToken() {
-        return telegramBotConfig.getToken();
-    }
 
     @Override
     public String getBotUsername() {
-        return telegramBotConfig.getName();
+        return config.getName();
+    }
+
+    @Override
+    public String getBotToken() {
+        return config.getToken();
     }
 
     @Override
@@ -37,22 +39,17 @@ public class TelegramBotService extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+
         if (!update.hasMessage() || !update.getMessage().hasText()) {
             return;
         }
 
-        String text = update.getMessage().getText();
+        SendMessage response = dispatcher.dispatch(update);
 
-        handlers.stream()
-                .filter(handler -> handler.canHandle(text))
-                .findFirst()
-                .ifPresent(handler -> {
-                    SendMessage response = handler.handle(update);
-                    try {
-                        execute(response);
-                    } catch (Exception e) {
-                        // логирование
-                    }
-                });
+        try {
+            execute(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

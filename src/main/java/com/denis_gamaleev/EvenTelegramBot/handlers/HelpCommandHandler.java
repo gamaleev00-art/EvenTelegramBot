@@ -2,6 +2,7 @@ package com.denis_gamaleev.EvenTelegramBot.handlers;
 
 import com.denis_gamaleev.EvenTelegramBot.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -9,6 +10,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
 
 @Component
+@Order(3)
 @RequiredArgsConstructor
 public class HelpCommandHandler implements CommandHandler {
 
@@ -32,16 +34,20 @@ public class HelpCommandHandler implements CommandHandler {
         message.setChatId(chatId);
 
         if (!userService.isAuthorized(telegramId)) {
-                message.setText("Я бот который преобразует обычные сообщения в события в Яндекс календаре и проверяет список имеющихся планов\n" +
-                        "Хотите записать новое событие?\n" +
-                        "Тогда пришли сообщение любого формата по типу:\n" +
-                        "завтра в 19:00 тренировка\n" +
-                        "25 мая в 18 встреча\n" +
-                        "покажи мои дела\n");
+                message.setText("""
+                Я умею:
+                • создавать события из обычного текста
+                • показывать запланированные дела
+                • работать с Яндекс Календарем
+                """);
         } else {
-            message.setText("Я бот который преобразует обычные сообщения в события в Яндекс календаре и проверяет список имеющихся планов\n" +
-                    "Для использования полного функционала зарегистрируйтесь как Яндекс пользователь\n" +
-                    "Для этого пришлите 'регистрация'");
+            message.setText("""
+                Я умею:
+                • создавать события из обычного текста
+                • показывать запланированные дела
+                • работать с Яндекс Календарем
+                Но для этого необходимо зарегистрироваться
+                """);
         }
         return message;
     }

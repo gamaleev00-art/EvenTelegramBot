@@ -1,0 +1,7 @@
+yandex:
+  oauth:
+    client-id: 890d3a3513e94571b80ea5ef4d2298e2
+    client-secret: 3c287d70e2a842d58e40e066b599190f
+    redirect-uri: http://localhost:8080/oauth/yandex/callback
+    auth-url: https://oauth.yandex.ru/authorize
+    token-url: https://oauth.yandex.ru/token

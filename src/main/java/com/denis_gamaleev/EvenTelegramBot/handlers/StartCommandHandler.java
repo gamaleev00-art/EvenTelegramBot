@@ -2,10 +2,12 @@ package com.denis_gamaleev.EvenTelegramBot.handlers;
 
 import com.denis_gamaleev.EvenTelegramBot.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
+@Order(1)
 @RequiredArgsConstructor
 public class StartCommandHandler implements CommandHandler {
 
@@ -27,11 +29,13 @@ public class StartCommandHandler implements CommandHandler {
         if (canHandle(update.getMessage().getText())) {
             if (!userService.isAuthorized(telegramId)) {
                 userService.getOrCreateTelegramUser(telegramId, userName);
+                message.setText("Этот бот позволяет создавать события в Яндекс календаре с помощью обычных сообщений\n" +
+                        "Для доступа к его возможностям привяжите ваш Яндекс аккаунт к этому боту\n" +
+                        "Для этого пришлите 'регистрация'");
             } else {
                 message.setText("Этот бот позволяет создавать события в Яндекс календаре с помощью обычных сообщений\n" +
                         "Для доступа к его возможностям привяжите ваш Яндекс аккаунт к этому боту\n" +
                         "Для этого пришлите 'регистрация'");
-
             }
         }
         return message;
