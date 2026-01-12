@@ -21,7 +21,7 @@ public class YandexOAuthClient implements OAuthClient{
                 + "?response_type=code"
                 + "&client_id=" + properties.getClientId()
                 + "&redirect_uri=" + properties.getRedirectUri()
-                + "&scope=calendar"
+                + "&scope=calendar:all"
                 + "&state=" + telegramUserId;
     }
 
