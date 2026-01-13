@@ -52,6 +52,14 @@ public class ParseEventCommandHandler implements CommandHandler {
                     "Событие успешно добавлено"
             );
 
+        } catch (DateTimeParseException | IllegalArgumentException e) {
+            return new SendMessage(
+                    update.getMessage().getChatId().toString(),
+                    "Не смог распознать дату");
+        } catch (HttpClientErrorException.Unauthorized e) {
+            return new SendMessage(
+                    update.getMessage().getChatId().toString(),
+                    "Проблема с авторизацией Яндекс аккаунта");
         } catch (Exception e) {
             return new SendMessage(
                     update.getMessage().getChatId().toString(),
